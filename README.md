@@ -35,8 +35,7 @@ same for `deepconf/`. cell 1 shards across every gpu it finds, so set `TP` at th
 of that file if you want to use fewer gpus.
 ## settings
 
-everything you would want to change sits at the top of cell 2, in the block marked
-control panel. the ones that matter most:
+everything you would want to change sits at the top of cell 2 in the control panel
 
 - `DATASET`: which benchmark to run. aime25, math500, hmmt25 or gsm8k, all read from
   `benchmarks/`
@@ -54,8 +53,7 @@ control panel. the ones that matter most:
 ## what comes out
 
 one pickle file per question which is written to `OUT_DIR`. each one holds every attempt's full
-text, its confidence over time, any probes it fired, and the final vote worked out seven
-different ways so you can compare them.
+text, its confidence over time, any probes it fired, and the final vote with seven different voting methods that deepconf use.
+we use the lowest group confidence (min_window_weighted) which is the same that deepconf online uses.
 
-if a question's pickle is already in `OUT_DIR` it gets skipped. so a sweep you had to kill halfway
-picks up where it stopped when you rerun it. to redo a question, delete its pickle first.
+if a question's pickle is already in `OUT_DIR` it gets skipped so in order to redo a question you have to delete its pickle first.
