@@ -65,8 +65,7 @@ V(a*) / sum(V) >= 0.95
 
 where `a*` is the current leading answer. each trace is weighted using its lowest window
 confidence, following the confidence measure used by deepconf for online inference, and
-we use the same consensus-based early stopping rule as deepconf, and only let it fire
-once at least 3 traces have finished.
+we use deepconf's same consensus-based early stopping rule with at least 3 finishers.
 
 both run against a stock vllm server and compute confidence client-side, so the serving
 setup is identical across arms.
