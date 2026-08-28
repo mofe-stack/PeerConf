@@ -55,7 +55,7 @@ everything that can be changed is at the top of cell 2 in the control panel
 
 ## what comes out
 
-one pickle file for every question which is written to `OUT_DIR`. each one holds every attempt's full
+one pickle file for every question which is written to `OUT_DIR`. each file holds every traces full
 text, its confidence over time, all the probes, and the final vote with seven different voting methods that deepconf use.
 we use the lowest group confidence (min_window_weighted) which is the same that deepconf online uses.
 
