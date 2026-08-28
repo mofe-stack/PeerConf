@@ -44,7 +44,8 @@ control panel. the ones that matter most:
 - `SEATS` and `MAX_TRACES`: how many attempts run at once, and how many the run is
   allowed in total. 16 and 32 by default
 - `BAR_KEEP_TOP`: how strict the cutoff is. 10 keeps only the most confident tenth of
-  finished attempts, which is what we call peerconf-low. 90 is far more forgiving
+  finished attempts, which is what we call peerconf-low. 90 keeps the most confident
+  90% of them, which is peerconf-high
 - `WINDOW`: how many recent tokens the confidence score averages over. 2048 on aime25
   and hmmt25, 256 on math500, whose answers are much shorter
 - `PROBE_EVERY`: how many tokens between completion probes. 4096 on aime25 and hmmt25,
