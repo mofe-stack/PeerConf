@@ -53,7 +53,7 @@ control panel. the ones that matter most:
 
 ## what comes out
 
-one pickle file per question, written to `OUT_DIR`. each one holds every attempt's full
+one pickle file per question which is written to `OUT_DIR`. each one holds every attempt's full
 text, its confidence over time, any probes it fired, and the final vote worked out seven
 different ways so you can compare them.
 
