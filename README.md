@@ -31,7 +31,7 @@ python peerconf/cell1_start_server.py     # leave this running
 python peerconf/cell2_run.py
 ```
 
-same for `deepconf/`. cell 1 shards across every gpu it finds, so set `TP` at the top
+same for `deepconf/`. cell also 1 shards across every gpu it finds, so set `TP` at the top
 of that file if you want to use fewer gpus.
 ## settings
 
