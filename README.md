@@ -13,7 +13,7 @@ about what level of confidence is typical among successful completions.
 peerconf uses these two observations to decide which traces are worth continuing. unlike
 approaches that require a separate warm-up phase to estimate a confidence threshold,
 peerconf estimates this threshold online from traces that have already completed for the
-current problem. confidence filtering can therefore begin as soon as the first trace
+current problem. confidence filtering and agreement checks can therefore begin as soon as the first trace
 finishes.
 
 ## how peerconf works
