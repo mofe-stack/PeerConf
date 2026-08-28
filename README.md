@@ -1,7 +1,7 @@
 # peerconf
 
-warmup-free confidence filtering for parallel llm reasoning. the threshold comes from
-the traces that finish inside the run itself instead of a separate warm-up phase. therefore
+warmup-free confidence filtering for parallel llm reasoning. the threshold comes from all the
+traces that finish inside the run itself instead of a separate warm-up phase. therefore
 filtering and agreement checks start at the first finisher and completion probes stop a trace once the model has
 committed to its answer by crossing the confidence threshold and closing its own reasoning and that answer becomes its vote.
 
