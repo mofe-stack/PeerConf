@@ -2,7 +2,7 @@
 
 warmup-free confidence filtering for parallel llm reasoning. the threshold comes from
 the traces that finish inside the run itself instead of a separate warm-up phase, so
-filtering starts at the first finisher. completion probes stop a trace once it has
+filtering and agreement checks start at the first finisher. completion probes stop a trace once it has
 committed to its answer, and that answer becomes its vote.
 
 `peerconf/` is the method. `deepconf/` is the baseline, reimplemented from the paper
