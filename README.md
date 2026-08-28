@@ -33,8 +33,8 @@ that answer then becomes the trace's vote.
 
 when a trace leaves an active seat, peerconf can launch a replacement trace, subject to
 the configured sampling budget. this allows computation to be redirected away from traces
-that have already reached a sufficiently confident conclusion and toward additional
-independent attempts.
+that have already reached a sufficiently confident conclusion or dropped below the
+threshold and toward additional independent attempts.
 
 agreement across the finished traces is checked every time one leaves, so a question
 can end as soon as its answer settles.
