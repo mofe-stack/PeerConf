@@ -9,7 +9,7 @@ committed to its answer, and that answer becomes its vote.
 with adaptive sampling that was not found in the official release repo. that is the consensus stop,
 which ends a question once the leading answer holds 95% of the confidence-weighted
 vote, `V(a) / sum(V) >= 0.95`, where a trace's weight is its lowest window confidence.
-both run against a stock vllm server and compute confidence client-side, so the
+both methods run against a stock vllm server and compute confidence client-side, so the
 serving setup is identical across arms.
 
 ## what you need
