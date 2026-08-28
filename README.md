@@ -35,7 +35,7 @@ same for `deepconf/`. cell also 1 shards across every gpu it finds, so set `TP` 
 of that file if you want to use fewer gpus.
 ## settings
 
-everything you would want to change sits at the top of cell 2 in the control panel
+everything that can be changed is at the top of cell 2 in the control panel
 
 - `DATASET`: which benchmark to run. aime25, math500, hmmt25 or gsm8k, all read from
   `benchmarks/`
