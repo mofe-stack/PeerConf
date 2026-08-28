@@ -5,7 +5,7 @@ the traces that finish inside the run itself instead of a separate warm-up phase
 filtering and agreement checks start at the first finisher. completion probes stop a trace once it has
 committed to its answer, and that answer becomes its vote.
 
-`peerconf/` is the method. `deepconf/` is the baseline, reimplemented from the paper
+`peerconf/` is the method. `deepconf/` is the baseline which is reimplemented from the paper
 since adaptive sampling was not in the official release. that is the consensus stop,
 which ends a question once the leading answer holds 95% of the confidence-weighted
 vote, `V(a) / sum(V) >= 0.95`, where a trace's weight is its lowest window confidence.
