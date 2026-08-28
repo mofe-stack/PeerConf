@@ -46,7 +46,7 @@ everything lives at the top of cell 2 under the control panel. the ones worth kn
 - `SEATS` and `MAX_TRACES`: 16 traces at once, 32 launched in total
 - `BAR_KEEP_TOP`: 10 is peerconf-low, 90 is peerconf-high
 - `WINDOW`: 2048 on aime25 and hmmt25, 256 on math500
-- `PROBE_EVERY`: tokens between completion probes, 0 turns them off
+- `PROBE_EVERY`: tokens between completion probes, 0 turns them off, 4096 on aime25 and hmmt25, and 512 on math500
 
 ## output
 
