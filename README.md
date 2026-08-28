@@ -6,10 +6,11 @@ filtering starts at the first finisher. completion probes stop a trace once it h
 committed to its answer, and that answer becomes its vote.
 
 `peerconf/` is the method. `deepconf/` is the baseline, reimplemented from the paper
-since adaptive sampling (the consensus stop, which ends a question once the finished
-traces agree on an answer) was not in the official release. both run against a stock
-vllm server and compute confidence client-side, so the serving setup is identical
-across arms.
+since adaptive sampling was not in the official release. that is the consensus stop,
+which ends a question once the leading answer holds 95% of the confidence-weighted
+vote, `V(a) / sum(V) >= 0.95`, where a trace's weight is its lowest window confidence.
+both run against a stock vllm server and compute confidence client-side, so the
+serving setup is identical across arms.
 
 ## what you need
 
