@@ -14,7 +14,7 @@ serving setup is identical across arms.
 
 ## what you need
 
-a gpu, and:
+a gpu and:
 
 ```
 pip install vllm transformers requests numpy
