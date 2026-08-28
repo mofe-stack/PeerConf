@@ -38,7 +38,7 @@ that have already reached a sufficiently confident conclusion or dropped below t
 threshold and toward additional independent attempts.
 
 agreement across the finished traces is checked every time one leaves, so a question
-can end as soon as the leading answer holds 95% of the confidence-weighted vote.
+can end as soon as they agree on an answer.
 
 the goal is to retain the benefits of parallel reasoning and confidence-weighted voting
 while reducing unnecessary generation.
