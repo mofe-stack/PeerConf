@@ -33,21 +33,28 @@ python peerconf/cell2_run.py
 
 same for `deepconf/`. cell 1 shards across every gpu it finds, so set `TP` at the top
 of that file if you want fewer.
-
 ## settings
 
-everything lives at the top of cell 2 under the control panel. the ones worth knowing:
+everything you would want to change sits at the top of cell 2, in the block marked
+control panel. the ones that matter most:
 
-- `DATASET`: aime25, math500, hmmt25 or gsm8k, read from `benchmarks/`
-- `QIDS`: which questions to run
-- `SEATS` and `MAX_TRACES`: 16 traces at once, 32 launched in total
-- `BAR_KEEP_TOP`: 10 is peerconf-low, 90 is peerconf-high
-- `WINDOW`: 2048 on aime25 and hmmt25, 256 on math500
-- `PROBE_EVERY`: tokens between completion probes, 0 turns them off, 4096 on aime25 and hmmt25, and 512 on math500
+- `DATASET`: which benchmark to run. aime25, math500, hmmt25 or gsm8k, all read from
+  `benchmarks/`
+- `QIDS`: which questions from it
+- `SEATS` and `MAX_TRACES`: how many attempts run at once, and how many the run is
+  allowed in total. 16 and 32 by default
+- `BAR_KEEP_TOP`: how strict the cutoff is. 10 keeps only the most confident tenth of
+  finished attempts, which is what we call peerconf-low. 90 is far more forgiving
+- `WINDOW`: how many recent tokens the confidence score averages over. 2048 on aime25
+  and hmmt25, 256 on math500, whose answers are much shorter
+- `PROBE_EVERY`: how many tokens between completion probes. 4096 on aime25 and hmmt25,
+  512 on math500. set it to 0 to turn probes off entirely
 
-## output
+## what comes out
 
-one pickle per question in `OUT_DIR`, holding each trace's text, its confidence over
-time, the probes it fired, and the vote under seven different methods. a question whose
-pickle already exists is skipped, so a sweep that gets killed picks up where it stopped.
-delete a pickle to redo that question.
+one pickle file per question, written to `OUT_DIR`. each one holds every attempt's full
+text, its confidence over time, any probes it fired, and the final vote worked out seven
+different ways so you can compare them.
+
+if a question's pickle already exists it gets skipped. so a sweep you had to kill halfway
+picks up where it stopped when you rerun it. to redo a question, delete its pickle first.
