@@ -23,7 +23,7 @@ pip install git+https://github.com/hao-ai-lab/Dynasor.git
 
 ## running it
 
-two cells, in order. cell 1 starts the server and waits for it to come up while cell 2 does
+two cells run in order. cell 1 starts the server and waits for it to come up while cell 2 does
 the run.
 
 ```
