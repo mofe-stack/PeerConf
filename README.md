@@ -43,8 +43,8 @@ everything you would want to change sits at the top of cell 2 in the control pan
 - `SEATS` and `MAX_TRACES`: how many attempts run at once, and how many the run is
   allowed in total. 16 and 32 by default
 - `REPLACEMENT_SEATS`: how many replacements can run at once. one starts every time a
-  trace departs, and once there are none left to replace it keeps launching more
-  until this many replacements are running
+  trace departs, and once there are none left to replace it keeps launching more traces
+  until this many replacements are running.
 - `BAR_KEEP_TOP`: how strict the cutoff is. 10 keeps only the most confident tenth of
   finished attempts the traces worst moments which is what we call peerconf-low. 90 keeps the most confident
   90% of the traces worst moments which we call peerconf-high 
