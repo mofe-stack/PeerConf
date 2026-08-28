@@ -1,16 +1,52 @@
 # peerconf
 
-warmup-free confidence filtering for parallel llm reasoning. the threshold comes from all the
-traces that finish inside the run itself instead of a separate warm-up phase. therefore
-filtering and agreement checks start at the first finisher and completion probes stop a trace once the model has
-committed to its answer by crossing the confidence threshold and closing its own reasoning and that answer becomes its vote.
+warmup-free confidence filtering for parallel llm reasoning.
 
-`peerconf/` is the method. `deepconf/` is the baseline which is reimplemented from the paper
-with adaptive sampling that was not found in the official release repo. Adaptive sampling is the consensus stop
-and it ends a question once the leading answer holds 95% of the confidence-weighted
-vote, `V(a) / sum(V) >= 0.95`, and each trace's weight is its lowest window confidence.
-both peeer and deepconf run against a stock vllm server and compute confidence client-side, so the
-serving setup is identical across arms.
+peerconf is a method for making parallel test-time reasoning more compute-efficient by
+using confidence estimates from the reasoning traces generated within the current run.
+
+the central idea is simple: when we sample many reasoning traces in parallel, some
+traces become sufficiently confident in their answer well before they exhaust their
+token budget. at the same time, the traces that finish early provide useful information
+about what level of confidence is typical among successful completions.
+
+peerconf uses these two observations to decide which traces are worth continuing. unlike
+approaches that require a separate warm-up phase to estimate a confidence threshold,
+peerconf estimates this threshold online from traces that have already completed for the
+current problem. confidence filtering can therefore begin as soon as the first trace
+finishes.
+
+## how peerconf works
+
+for each problem, we launch multiple reasoning traces in parallel.
+
+as traces complete, peerconf uses their confidence scores to construct an online
+confidence threshold. active traces are periodically probed to determine whether they
+have effectively committed to an answer.
+
+a trace can terminate early when:
+
+- its confidence crosses the current peerconf threshold, and
+- the model has completed its reasoning and committed to an answer.
+
+that answer then becomes the trace's vote.
+
+when a trace leaves an active seat, peerconf can launch a replacement trace, subject to
+the configured sampling budget. this allows computation to be redirected away from traces
+that have already reached a sufficiently confident conclusion and toward additional
+independent attempts.
+
+the goal is to retain the benefits of parallel reasoning and confidence-weighted voting
+while reducing unnecessary generation.
+
+## what is in here
+
+`peerconf/` is the method. `deepconf/` is the baseline which is reimplemented from the
+paper with adaptive sampling that was not found in the official release repo. adaptive
+sampling is the consensus stop and it ends a question once the leading answer holds 95%
+of the confidence-weighted vote, `V(a) / sum(V) >= 0.95`, and each trace's weight is its
+lowest window confidence. both peerconf and deepconf run against a stock vllm server and
+compute confidence client-side, so the serving setup is identical across arms.
 
 ## what you need
 
