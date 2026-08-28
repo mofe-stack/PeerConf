@@ -19,9 +19,6 @@ pip install vllm transformers requests numpy
 pip install git+https://github.com/hao-ai-lab/Dynasor.git
 ```
 
-dynasor supplies `math_equal`, which the cells use to decide whether two answers are
-the same. both arms use it, so they grade identically.
-
 ## running it
 
 two cells, in order. cell 1 starts the server and waits for it to come up. cell 2 does
