@@ -32,7 +32,8 @@ a trace can terminate early when:
 that answer then becomes the trace's vote.
 
 when a trace leaves an active seat, peerconf can launch a replacement trace, subject to
-the configured sampling budget. this allows computation to be redirected away from traces
+the configured sampling budget, and that replacement is judged against the threshold as
+it generates. this allows computation to be redirected away from traces
 that have already reached a sufficiently confident conclusion or dropped below the
 threshold and toward additional independent attempts.
 
