@@ -20,8 +20,7 @@ pip install git+https://github.com/hao-ai-lab/Dynasor.git
 ```
 
 dynasor supplies `math_equal`, which the cells use to decide whether two answers are
-the same. it reads past notation, so `\dfrac{1}{2}` and `\frac{1}{2}` count as one
-answer rather than splitting the vote. both arms use it, so they grade identically.
+the same. both arms use it, so they grade identically.
 
 ## running it
 
