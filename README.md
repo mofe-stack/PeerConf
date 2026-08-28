@@ -36,6 +36,9 @@ the configured sampling budget. this allows computation to be redirected away fr
 that have already reached a sufficiently confident conclusion and toward additional
 independent attempts.
 
+agreement across the finished traces is checked every time one leaves, so a question
+can end as soon as its answer settles.
+
 the goal is to retain the benefits of parallel reasoning and confidence-weighted voting
 while reducing unnecessary generation.
 
