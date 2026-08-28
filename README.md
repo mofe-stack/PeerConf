@@ -9,7 +9,7 @@ committed to its answer by crossing the confidence threshold and closing its own
 with adaptive sampling that was not found in the official release repo. Adaptive sampling is the consensus stop
 and it ends a question once the leading answer holds 95% of the confidence-weighted
 vote, `V(a) / sum(V) >= 0.95`, and each trace's weight is its lowest window confidence.
-both methods run against a stock vllm server and compute confidence client-side, so the
+both peeer and deepconf run against a stock vllm server and compute confidence client-side, so the
 serving setup is identical across arms.
 
 ## what you need
