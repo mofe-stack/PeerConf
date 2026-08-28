@@ -57,5 +57,5 @@ one pickle file per question which is written to `OUT_DIR`. each one holds every
 text, its confidence over time, any probes it fired, and the final vote worked out seven
 different ways so you can compare them.
 
-if a question's pickle already exists it gets skipped. so a sweep you had to kill halfway
+if a question's pickle is already in `OUT_DIR` it gets skipped. so a sweep you had to kill halfway
 picks up where it stopped when you rerun it. to redo a question, delete its pickle first.
