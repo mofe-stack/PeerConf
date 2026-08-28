@@ -39,14 +39,32 @@ independent attempts.
 the goal is to retain the benefits of parallel reasoning and confidence-weighted voting
 while reducing unnecessary generation.
 
-## what is in here
+## comparison with deepconf
 
-`peerconf/` is the method. `deepconf/` is the baseline which is reimplemented from the
-paper with adaptive sampling that was not found in the official release repo. adaptive
-sampling is the consensus stop and it ends a question once the leading answer holds 95%
-of the confidence-weighted vote, `V(a) / sum(V) >= 0.95`, and each trace's weight is its
-lowest window confidence. both peerconf and deepconf run against a stock vllm server and
-compute confidence client-side, so the serving setup is identical across arms.
+the repository contains two implementations:
+
+```
+peerconf/   peerconf
+deepconf/   deepconf baseline
+```
+
+the deepconf implementation is based on the original method, with adaptive sampling
+added because we did not find this component in the official release repository.
+
+for deepconf, adaptive sampling acts as a consensus-based stopping rule. sampling for a
+question terminates when the leading answer accounts for at least 95% of the total
+confidence-weighted vote:
+
+```
+V(a*) / sum(V) >= 0.95
+```
+
+where `a*` is the current leading answer. each trace is weighted using its lowest window
+confidence, following the confidence measure used by deepconf for online inference, and
+we use deepconf's same consensus-based early stopping rule with at least 3 finishers.
+
+both run against a stock vllm server and compute confidence client-side, so the serving
+setup is identical across arms.
 
 ## what you need
 
