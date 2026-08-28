@@ -42,6 +42,8 @@ everything you would want to change sits at the top of cell 2 in the control pan
 - `QIDS`: which questions from it
 - `SEATS` and `MAX_TRACES`: how many attempts run at once, and how many the run is
   allowed in total. 16 and 32 by default
+- `REPLACEMENT_SEATS`: how many replacements can run at once. one starts each time an
+  attempt leaves, and once the opening batch has all gone it fills up to this number
 - `BAR_KEEP_TOP`: how strict the cutoff is. 10 keeps only the most confident tenth of
   finished attempts the traces worst moments which is what we call peerconf-low. 90 keeps the most confident
   90% of the traces worst moments which we call peerconf-high 
