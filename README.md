@@ -20,7 +20,9 @@ pip install git+https://github.com/hao-ai-lab/Dynasor.git
 ```
 
 dynasor is only there for `math_equal`, which decides whether two answers are the same.
-both arms use it, so they grade identically.
+the cells tidy the latex first so `\dfrac{1}{2}` and `rac{1}{2}` count as one answer,
+and hand anything that still differs to `math_equal`. both arms do this, so they grade
+identically.
 
 ## running it
 
