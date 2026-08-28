@@ -39,12 +39,12 @@ of that file if you want fewer.
 
 everything lives at the top of cell 2 under the control panel. the ones worth knowing:
 
-- `DATASET` — aime25, math500, hmmt25 or gsm8k, read from `benchmarks/`
-- `QIDS` — which questions to run
-- `SEATS` and `MAX_TRACES` — 16 traces at once, 32 launched in total
-- `BAR_KEEP_TOP` — 10 is peerconf-low, 90 is peerconf-high
-- `WINDOW` — 2048 on aime25 and hmmt25, 256 on math500
-- `PROBE_EVERY` — tokens between completion probes, 0 turns them off
+- `DATASET`: aime25, math500, hmmt25 or gsm8k, read from `benchmarks/`
+- `QIDS`: which questions to run
+- `SEATS` and `MAX_TRACES`: 16 traces at once, 32 launched in total
+- `BAR_KEEP_TOP`: 10 is peerconf-low, 90 is peerconf-high
+- `WINDOW`: 2048 on aime25 and hmmt25, 256 on math500
+- `PROBE_EVERY`: tokens between completion probes, 0 turns them off
 
 ## output
 
