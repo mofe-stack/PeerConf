@@ -32,7 +32,7 @@ python peerconf/cell2_run.py
 ```
 
 same for `deepconf/`. cell 1 shards across every gpu it finds, so set `TP` at the top
-of that file if you want fewer.
+of that file if you want to use fewer gpus.
 ## settings
 
 everything you would want to change sits at the top of cell 2, in the block marked
