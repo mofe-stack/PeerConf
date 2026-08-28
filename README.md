@@ -19,10 +19,9 @@ pip install vllm transformers requests numpy
 pip install git+https://github.com/hao-ai-lab/Dynasor.git
 ```
 
-dynasor supplies `math_equal`. each cell compares answers with `same_answer`, which
-tidies the latex first so `\dfrac{1}{2}` and `\frac{1}{2}` count as one answer and
-falls back to `math_equal` when the strings still differ. both arms use it, so they
-grade identically.
+dynasor supplies `math_equal`, which the cells use to decide whether two answers are
+the same. it reads past notation, so `\dfrac{1}{2}` and `\frac{1}{2}` count as one
+answer rather than splitting the vote. both arms use it, so they grade identically.
 
 ## running it
 
