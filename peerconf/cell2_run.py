@@ -47,7 +47,7 @@ PROBE_TEXT       = "\n**Final Answer**\n\nThe final answer is \\boxed"
 PROBE_MAX_TOK    = 20         # greedy tokens per probe
 PROBE_MIN_TOKS   = 2048       # no probes before the first full window
 COMMIT_CONF        = 0.95       # commit on ONE probe: answer-token conf >= this...
-COMMIT_EWT         = True       # ...that also reached </think> or <|end|> (</end> is used in this code)
+COMMIT_EWT         = True       # ...that also reached </think> or <|end|> (</think> is used in this code)
 
 # ----- the margin certificate: if (leader − runner-up) > (live + unlaunched) the question ends
 
