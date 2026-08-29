@@ -196,9 +196,10 @@ def update_bar():
 
 def consensus_check():
     piles = {}
+    wave_out = all(x.status != "running" for x in traces if x.id < WAVE)
     for t in traces:
         if t.status == "finished" and t.answer is not None and t.confs:
-            if bar is not None and t.id < WAVE and min(t.confs) < bar:
+            if wave_out and bar is not None and t.id < WAVE and min(t.confs) < bar:
                 continue
             _k = ballot_key(piles, t.answer)
             piles[_k] = piles.get(_k, 0.0) + min(t.confs)
