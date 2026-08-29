@@ -114,8 +114,8 @@ everything that can be changed is at the top of cell 2 in the control panel
 
 ## what comes out
 
-one pickle file for every question which is written to `OUT_DIR`. each file holds every traces full
+one pickle file for every question which is written to `OUT_DIR`. each file holds every trace's full
 text, its confidence over time, all the probes, and the final vote with seven different voting methods that deepconf use.
-for both methods we use the lowest group confidence (min_window_weighted) which is the same voting method that deepconf online uses.
+for both methods we use the lowest group confidence (min_window_weighted) which is the same voting method that deepconf online use.
 
 if a question's pickle is already in `OUT_DIR` it gets skipped so in order to redo a question you have to delete its pickle first.
