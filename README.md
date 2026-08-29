@@ -89,8 +89,9 @@ python peerconf/cell1_start_server.py     # leave this running
 python peerconf/cell2_run.py
 ```
 
-same for `deepconf/`. cell also 1 shards across every gpu it finds, so set `TP` at the top
-of that file if you want to use fewer gpus.
+same for `deepconf/`. cell 1 also shards across every gpu it finds, so set `TP` at the
+top of that file to the number of gpus you want to use.
+
 ## settings
 
 everything that can be changed is at the top of cell 2 in the control panel
