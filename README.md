@@ -103,9 +103,9 @@ everything that can be changed is at the top of cell 2 in the control panel
 - `REPLACEMENT_SEATS`: how many replacements can run at once. one starts every time a
   trace departs, and once there are none left to replace it keeps launching more traces
   until this many replacements are running.
-- `BAR_KEEP_TOP`: how strict the cutoff is. 10 keeps only the most confident tenth of
-  finished attempts the traces worst moments which is what we call peerconf-low. 90 keeps the most confident
-  90% of the traces worst moments which we call peerconf-high 
+- `BAR_KEEP_TOP`: how strict the cutoff is. 10 keeps only the most confident 10% of
+  the traces' worst moments which we call peerconf-low. 90 keeps the most confident
+  90% of the traces' worst moments which we call peerconf-high
 - `WINDOW`: how many recent tokens the confidence score averages over. 2048 on aime25
   and hmmt25, 256 on math500 because its traces are much shorter
 - `PROBE_EVERY`: how many tokens between completion probes. 4096 on aime25 and hmmt25,
