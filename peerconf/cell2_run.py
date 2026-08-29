@@ -51,7 +51,7 @@ COMMIT_EWT         = True       # ...that also reached </think> or <|end|> (</th
 
 # ----- the margin certificate: if (leader − runner-up) > (live + unlaunched) the question ends
 
-# ----- consensous-based early stopping -----
+# ----- consensus-based early stopping -----
 CONSENSUS      = 0.95     # checked after EVERY finished trace; if the leading answer
                           # holds this share of the weighted votes among finished
                           # traces, stop launching AND end the in-flight streams
