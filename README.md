@@ -116,6 +116,7 @@ everything that can be changed is at the top of cell 2 in the control panel
 
 one pkl file for every question which is written to `OUT_DIR`. each file holds every trace's full
 text, its confidence over time, all the probes, and the final vote with seven different voting methods that deepconf use.
-for both methods we use the lowest group confidence (min_window_weighted) which is the same voting method that deepconf online use.
+for both methods the confidence-weighed vote uses the lowest group confidence (min_window_weighted) which is the same
+voting method that deepconf online uses.
 
 if a question's pkl is already in `OUT_DIR` it gets skipped so in order to redo a question you have to delete its pkl first.
