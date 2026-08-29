@@ -37,8 +37,8 @@ it generates. this allows computation to be redirected away from traces
 that have already reached a sufficiently confident conclusion or dropped below the
 threshold and toward additional independent attempts.
 
-agreement across the finished traces is checked every time one leaves, so a question
-can end as soon as they agree on an answer.
+agreement across the finished traces is checked every time a trace deaprts instead of after a seperate warmup phase, so a question
+can end as soon as the model's traces agree on an answer.
 
 the goal is to retain the benefits of parallel reasoning and confidence-weighted voting
 while reducing unnecessary generation.
@@ -64,8 +64,8 @@ V(a*) / sum(V) >= 0.95
 ```
 
 where `a*` is the current leading answer. each trace is weighted using its lowest window
-confidence, following the confidence measure used by deepconf for online inference, and
-we use deepconf's same consensus-based early stopping rule with at least 3 finishers.
+confidence, following the confidence measure used by deepconf for online inference. we use the same consensus-based early stopping rule
+as deepconf and only apply it when at least 3 traces have finished.
 
 both run against a stock vllm server and compute confidence client-side, so the serving
 setup is identical across arms.
@@ -115,6 +115,6 @@ everything that can be changed is at the top of cell 2 in the control panel
 
 one pickle file for every question which is written to `OUT_DIR`. each file holds every traces full
 text, its confidence over time, all the probes, and the final vote with seven different voting methods that deepconf use.
-we use the lowest group confidence (min_window_weighted) which is the same that deepconf online uses.
+for both methods we use the lowest group confidence (min_window_weighted) which is the same voting method that deepconf online uses.
 
 if a question's pickle is already in `OUT_DIR` it gets skipped so in order to redo a question you have to delete its pickle first.
