@@ -20,7 +20,7 @@ finishes.
 
 for each problem, we launch multiple reasoning traces in parallel.
 
-as traces complete, peerconf uses their confidence scores to construct an online
+as traces finish, peerconf uses their confidence scores to construct an online
 confidence threshold. active traces are periodically probed to determine whether they
 have effectively committed to an answer.
 
@@ -114,8 +114,8 @@ everything that can be changed is at the top of cell 2 in the control panel
 
 ## what comes out
 
-one pickle file for every question which is written to `OUT_DIR`. each file holds every trace's full
+one pkl file for every question which is written to `OUT_DIR`. each file holds every trace's full
 text, its confidence over time, all the probes, and the final vote with seven different voting methods that deepconf use.
 for both methods we use the lowest group confidence (min_window_weighted) which is the same voting method that deepconf online use.
 
-if a question's pickle is already in `OUT_DIR` it gets skipped so in order to redo a question you have to delete its pickle first.
+if a question's pkl is already in `OUT_DIR` it gets skipped so in order to redo a question you have to delete its pkl first.
