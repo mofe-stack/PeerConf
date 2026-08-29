@@ -1,4 +1,4 @@
-# peerconf
+# peer think with confidence (peerconf) 
 
 warmup-free confidence filtering for parallel llm reasoning.
 
