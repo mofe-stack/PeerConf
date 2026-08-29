@@ -25,8 +25,7 @@ REPLACEMENT_SEATS = SEATS   # how many of those seats may hold replacements at o
 # Self-calibrating: the run's own finishers are the warmup. Wave 1 (the first
 # WAVE traces) runs bar-free; each finisher votes and sends its lifetime-worst
 # window score to the calibration set. The bar = keep top BAR_KEEP_TOP% of
-# those minima, updated on every new finisher and applied instantly to every
-# new path
+# those minima, updated on every new finisher and applied instantly to every replacement
 BAR_KEEP_TOP        = 10  # 10 = PeerConf-low, 90 = PeerConf-high 
 BAR_MIN_CALIBRATORS = 1   # the first finisher arms the bar (its worst moment IS
                           # the bar); every later finisher refines it
@@ -38,7 +37,7 @@ STREAM_BATCH   = 1        # tokens are STREAMED: every STREAM_BATCH tokens the w
                           # A path is judged from its first full window (token 2048). The bar itself only
                           # moves when a finisher ends and sends its minimum.
 
-# ----- the loop guard (text repetition; confidence is blind to loops) -----
+# ----- the loop guard (text repetition) -----
 LOOP_ACTION      = "cut"      # "off" | "cut" = end the stuck trace on the spot
                             
 LOOP_CHECK_EVERY = 256        # tokens between checks
@@ -54,11 +53,9 @@ PROBE_MIN_TOKS   = 2048       # no probes before the first full window
 COMMIT_CONF        = 0.95       # commit on ONE probe: answer-token conf >= this...
 COMMIT_EWT         = True       # ...that also reached </think> or <|end|> (</think> is used in this code)
 
-# ----- the certificate (second close): if (leader − runner-up) > (live +
-# unlaunched), no possible future changes the winner: even if every path still
-# out there voted runner-up, the leader still wins — so unlike the landslide's (MARS at gamma=1).
+# ----- the margin certificate: if (leader − runner-up) > (live + unlaunched) the question ends
 
-# ----- early stopping (the landslide rule) -----
+# ----- consensous-based early stopping -----
 CONSENSUS      = 0.95     # checked after EVERY finished trace; if the leading answer
                           # holds this share of the weighted votes among finished
                           # traces, stop launching AND end the in-flight streams
