@@ -32,10 +32,6 @@ BAR_MIN_CALIBRATORS = 1   # the first finisher arms the bar (its worst moment IS
 
 WINDOW         = 2048     # sliding window: a token's score = avg confidence of its
                           # last 2048 tokens. FULL windows only.
-STREAM_BATCH   = 1        # tokens are STREAMED: every STREAM_BATCH tokens the worker
-                          # reports in and the main thread judges. At 1 a cut lands exactly at the crossing.
-                          # A path is judged from its first full window (token 2048). The bar itself only
-                          # moves when a finisher ends and sends its minimum.
 
 # ----- the loop guard (text repetition) -----
 LOOP_ACTION      = "cut"      # "off" | "cut" = end the stuck trace on the spot
@@ -301,10 +297,9 @@ def run_stream(t, prompt_text, max_toks):
                     b_scores.append(s / len(win))
             if ch.get("finish_reason"):
                 fin = ch["finish_reason"]
-            if b_toks >= STREAM_BATCH:
-                events.put((t, {"kind": "batch", "text": "".join(b_text),
-                                "scores": b_scores, "ntok": b_toks}, None))
-                b_scores, b_text, b_toks = [], [], 0
+            events.put((t, {"kind": "batch", "text": "".join(b_text),
+                            "scores": b_scores, "ntok": b_toks}, None))
+            b_scores, b_text, b_toks = [], [], 0
         t.win = win
         events.put((t, {"kind": "end", "text": "".join(b_text),
                         "scores": b_scores, "ntok": b_toks,
@@ -390,8 +385,8 @@ for QID in QIDS:
     n_events  = 0
 
     # -------- the run loop: stream in, judge live --------
-    print(f"Run start: {SEATS} seats (cap {MAX_TRACES}), streaming (report every "
-          f"{STREAM_BATCH} tokens) | wave 1 line-free; replacements face the "
+    print(f"Run start: {SEATS} seats (cap {MAX_TRACES}), streaming "
+          f"| wave 1 line-free; replacements face the "
           f"self-calibrating bar (keep top {BAR_KEEP_TOP}%, arms at "
           f"{BAR_MIN_CALIBRATORS} finishers, updates per finisher)"
           + (f" | probes every {PROBE_EVERY} (commit at {COMMIT_CONF})"
@@ -598,7 +593,7 @@ for QID in QIDS:
                                 "DATASET": DATASET,
                                 "BAR_KEEP_TOP": BAR_KEEP_TOP,
                                 "BAR_MIN_CALIBRATORS": BAR_MIN_CALIBRATORS,
-                                "WINDOW": WINDOW, "STREAM_BATCH": STREAM_BATCH,
+                                "WINDOW": WINDOW,
                                 "LOOP_ACTION": LOOP_ACTION,
                                 "LOOP_CHECK_EVERY": LOOP_CHECK_EVERY,
                                 "LOOP_UNIT_CHARS": LOOP_UNIT_CHARS,
