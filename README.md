@@ -96,7 +96,7 @@ top of that file to the number of gpus you want to use.
 
 everything that can be changed is at the top of cell 2 in the control panel
 
-- `DATASET`: which benchmark to run. aime25, math500, hmmt25 or gsm8k, all read from
+- `DATASET`: which benchmark to run. aime25, math500, hmmt25 or gsm8k, all in
   `benchmarks/`
 - `QIDS`: which questions from it
 - `SEATS` and `MAX_TRACES`: how many attempts run at once, and how many the run is
