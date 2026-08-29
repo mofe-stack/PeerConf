@@ -67,8 +67,8 @@ where `a*` is the current leading answer. each trace is weighted using its lowes
 confidence, following the confidence measure used by deepconf for online inference. we use the same consensus-based early stopping rule
 as deepconf and only apply it when at least 3 traces have finished.
 
-both run against a stock vllm server and compute confidence client-side, so the serving
-setup is identical across arms.
+both run against a stock vllm server and compute confidence client-side, so server is set up the same way
+for both methods. 
 
 ## what you need
 
