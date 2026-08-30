@@ -85,7 +85,7 @@ two cells run in order. cell 1 starts the server and waits for it to come up whi
 the run.
 
 ```
-python peerconf/cell1_start_server.py     # leave this running
+python peerconf/cell1_start_server.py   
 python peerconf/cell2_run.py
 ```
 
