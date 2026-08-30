@@ -110,8 +110,8 @@ everything that can be changed is at the top of cell 2 in the control panel
 - `WINDOW`: how many recent tokens the confidence score averages over. 2048 on aime25
   and hmmt25, 256 on math500 because its traces are much shorter
 - `PROBE_EVERY`: how many tokens between completion probes. 4096 on aime25 and hmmt25,
-  512 on math500. the probe uses deepseek and qwen's end of thinking marker `</think>`, so running gpt-oss means changing it
-  to its own marker `<|end|>` in cell 2. set it to 0 to turn probes off entirely 
+  512 on math500. the probe uses deepseek and qwen's end of thinking marker `</think>`, so in order to run gpt-oss you have to
+  change it to its own marker `<|end|>` in cell 2. set it to 0 to turn probes off entirely 
 
 ## what comes out
 
