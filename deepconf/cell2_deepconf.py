@@ -1,4 +1,3 @@
-# ================= CELL 2 — DEEPCONF BASELINE (online, streaming) =================
 # DeepConf low/high as the paper runs it (CONFIDENCE_PERCENTILE picks: 10 = low,
 # 90 = high): 16 warmup traces run to completion, the bar freezes at the
 # percentile of their worst window scores, then the online wave streams token by
@@ -226,7 +225,6 @@ def drain(phase_traces):
                     print(f"Consensus: '{lead}' holds {share:.0%} — "
                           f"ending {len(live)} in-flight streams")
 
-# ---------------- voting helpers (used once per question) ----------------
 def trace_measures(t):
     c = np.array(t.confs) if t.confs else np.array([0.0])
     k = max(1, int(len(c) * 0.10))
@@ -256,7 +254,6 @@ executor = ThreadPoolExecutor(max_workers=TOTAL_BUDGET + 4)
 os.makedirs(OUT_DIR, exist_ok=True)
 t_sweep = time.time()
 
-# ==================== THE SWEEP: one run per question ====================
 for QID in QIDS:
     _name = f"q{QID}_deepconf_p{CONFIDENCE_PERCENTILE}_c{int(CONSENSUS*100)}.pkl"
     save_path = f"{OUT_DIR}/{DS_TAG}{_name}"
@@ -272,14 +269,12 @@ for QID in QIDS:
     PROMPT = tok.apply_chat_template([{"role": "user", "content": question}],
                                      tokenize=False, add_generation_prompt=True)
 
-    # -------- fresh run state --------
     events   = queue.Queue()
     inflight = set()
     t_start  = time.time()
     conf_bar = None
     run_over = False
 
-    # ---- phase 1: warmup, never judged ----
     print(f"Warmup: {WARMUP_TRACES} traces, streaming per token")
     traces = [Trace(i, "warmup") for i in range(WARMUP_TRACES)]
     for t in traces: launch(t)
@@ -290,7 +285,6 @@ for QID in QIDS:
     print(f"\nWarmup done: bar frozen at {conf_bar:.3f} "
           f"(keep top {CONFIDENCE_PERCENTILE}% of {len(wmins)} warmup minima)")
 
-    # ---- phase 2: online wave, judged per token at the frozen bar ----
     if CONSENSUS <= 1.0:
         lead, share = consensus_check()
         if lead is not None and share >= CONSENSUS:
@@ -304,7 +298,6 @@ for QID in QIDS:
         for t in wave: launch(t)
         drain(wave)
 
-    # -------- voting: the repo's seven methods over the voting pool --------
     voters = voters_now()
     M = {t.id: trace_measures(t) for t in voters}
 
