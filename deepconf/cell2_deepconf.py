@@ -1,3 +1,4 @@
+# ================= CELL 2 — DEEPCONF BASELINE (online, streaming) =================
 # DeepConf low/high as the paper runs it (CONFIDENCE_PERCENTILE picks: 10 = low,
 # 90 = high): 16 warmup traces run to completion, the bar freezes at the
 # percentile of their worst window scores, then the online wave streams token by
