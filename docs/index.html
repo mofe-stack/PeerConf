@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peer Think with Confidence</title>
+  <meta name="description" content="PeerConf: Self-Calibrating Early Stopping for Efficient Parallel LLM Reasoning. Warm-up-free confidence filtering with completion probes. NeurIPS 2026 MATH-AI Workshop.">
+  <meta property="og:title" content="PeerConf: Self-Calibrating Early Stopping for Efficient Parallel LLM Reasoning">
+  <meta property="og:description" content="Warm-up-free confidence filtering for parallel LLM reasoning. 60.7% to 79.8% fewer tokens than self-consistency at 32 traces.">
+  <meta property="og:image" content="static/images/fig1.png">
+  <link rel="icon" type="image/svg+xml" href="static/images/peerconf-mark.svg?v=8">
+  <link rel="icon" type="image/png" sizes="256x256" href="static/images/favicon.png?v=8">
+  <link rel="apple-touch-icon" href="static/images/favicon.png?v=8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Mono:wght@400&display=swap">
+  <style>
+    :root {
+      --ground: #ffffff;
+      --ink: #363636;
+      --text: #4a4a4a;
+      --muted: #7a7a7a;
+      --rule: #dbdbdb;
+      --link: #3273dc;
+      --button: #363636;
+      --button-hover: #1f1f1f;
+      --footer: #fafafa;
+      --tint-gen: #e8e9f7;   /* the three panel tints from Figure 1 */
+      --tint-bar: #dfe8f7;
+      --tint-probe: #dff1ea;
+      --tint-edge: #c9cbe0;
+      --sans: "Google Sans", "Noto Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+      --mono: "Noto Sans Mono", Consolas, "Courier New", monospace;
+    }
+    * { box-sizing: border-box; }
+    html { color-scheme: light; }
+    body {
+      margin: 0; background: var(--ground); color: var(--text);
+      font-family: var(--sans); font-size: 1rem; line-height: 1.6;
+      padding-block: 0; padding-inline: 20px;
+    }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 960px; margin-inline: auto; }
+    .narrow { max-width: 780px; margin-inline: auto; }
+
+    .venue-logo { position: absolute; top: 18px; left: 22px; display: block; line-height: 0; }
+    .venue-logo img { height: 44px; width: auto; }
+    .venue-logo:focus-visible { outline: 3px solid var(--link); outline-offset: 4px; }
+    body { position: relative; }
+
+    /* hero */
+    .hero { padding-block: 5rem 2rem; text-align: center; }
+    .title {
+      font-size: clamp(1.9rem, 4.2vw, 2.75rem); font-weight: 700; color: var(--ink);
+      line-height: 1.15; margin: 0 auto 1.25rem; max-width: 34ch; text-wrap: balance;
+    }
+    .title .nowrap { white-space: nowrap; }
+    .authors { font-size: 1.15rem; color: var(--ink); margin: 0 0 .35rem; }
+    .authors a { color: var(--link); }
+    .authors sup { font-size: .7em; }
+    .affil { font-size: 1.05rem; color: var(--ink); margin: 0; }
+    .venue { color: #555; font-weight: 700; margin: 1rem 0 0; }
+    .eql { font-size: .85rem; color: var(--muted); margin: .25rem 0 0; }
+    .links { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: 1.5rem; }
+    .button {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--button); color: #fff; border-radius: 999px;
+      padding: .55rem 1.1rem; font-size: .95rem; font-weight: 600; line-height: 1;
+      border: 1px solid transparent; transition: background .15s;
+    }
+    .button:hover { background: var(--button-hover); text-decoration: none; }
+    .button:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+    .button svg { width: 1em; height: 1em; fill: currentColor; }
+    .button .logo { height: 1.25em; width: auto; display: block; }
+
+    /* figures */
+    figure { margin: 0; }
+    figure img { display: block; width: 100%; height: auto; }
+    figcaption { text-align: center; color: var(--text); font-size: 1.05rem; margin-top: 1rem; max-width: 72ch; margin-inline: auto; }
+    figcaption b { color: var(--ink); }
+    .section { padding-block: 2rem; }
+    .section + .section { border-top: 1px solid var(--rule); }
+    h2 { font-size: 1.6rem; color: var(--ink); margin: 0 0 1rem; text-wrap: balance; }
+    h2.center { text-align: center; }
+    p { margin: 0 0 1rem; }
+    .lede { font-size: 1.1rem; }
+    .lede strong { color: var(--ink); }
+
+    /* how it works: three panels tinted like Figure 1 */
+    .panels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem; }
+    .panel { border: 1px solid var(--tint-edge); border-radius: 12px; padding: 1.1rem 1.2rem; }
+    .panel.gen { background: var(--tint-gen); }
+    .panel.bar { background: var(--tint-bar); }
+    .panel.probe { background: var(--tint-probe); border-color: #b9d9c8; }
+    .panel h3 { margin: 0 0 .5rem; font-size: 1.1rem; color: var(--ink); }
+    .panel p { margin: 0; font-size: .95rem; }
+    .panel .tag { font-family: var(--mono); font-size: .75rem; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; display: block; margin-bottom: .4rem; }
+
+    /* headline numbers pulled from the paper */
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0 0; }
+    .stat { border-top: 3px solid var(--ink); padding-top: .6rem; }
+    .stat .n { font-size: 2rem; font-weight: 700; color: var(--ink); line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .stat .l { color: var(--muted); font-size: .9rem; margin-top: .25rem; }
+
+    /* side-by-side figures */
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+
+    pre {
+      background: var(--footer); border: 1px solid var(--rule); border-radius: 8px;
+      padding: 1rem 1.25rem; overflow-x: auto; font-family: var(--mono); font-size: .9rem; line-height: 1.5; color: var(--ink);
+      margin: 0;
+    }
+    footer { background: var(--footer); border-top: 1px solid var(--rule); margin-inline: -20px; padding-block: 2.5rem; padding-inline: 20px; margin-top: 2rem; }
+    footer p { color: var(--text); font-size: .95rem; max-width: 70ch; margin-inline: auto; text-align: center; }
+
+    /* figure carousel, the template's image carousel rebuilt without Bulma */
+    .carousel { position: relative; padding-bottom: 2.25rem; }
+    .carousel .track { display: flex; align-items: center; overflow: hidden; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
+    .carousel .slide { flex: 0 0 100%; scroll-snap-align: start; padding-inline: 3rem; }
+    .carousel .slide img { max-width: 100%; margin-inline: auto; }
+    .carousel .nav {
+      position: absolute; top: 40%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--rule);
+      background: var(--ground); color: var(--ink); font-size: 1.6rem; line-height: 1; cursor: pointer;
+      display: grid; place-items: center; box-shadow: 0 2px 8px rgba(0,0,0,.08); transition: background .15s;
+    }
+    .carousel .nav:hover { background: var(--footer); }
+    .carousel .nav:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+    .carousel .prev { left: 0; }
+    .carousel .next { right: 0; }
+    .carousel .dots { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; gap: 8px; }
+    .carousel .dots button { width: 10px; height: 10px; border-radius: 50%; border: 0; padding: 0; background: var(--rule); cursor: pointer; transition: background .15s, transform .15s; }
+    .carousel .dots button[aria-selected="true"] { background: var(--ink); transform: scale(1.2); }
+    .carousel .dots button:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+
+    .bib-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+    .bib-head h2 { margin: 0; }
+    .copy-bib {
+      font-family: var(--sans); font-size: .9rem; font-weight: 600; padding: .45rem .9rem; border-radius: 999px;
+      border: 1px solid var(--rule); background: var(--ground); color: var(--ink); cursor: pointer; transition: background .15s, color .15s;
+    }
+    .copy-bib:hover { background: var(--footer); }
+    .copy-bib.copied { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .copy-bib:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+
+    .to-top {
+      position: fixed; right: 22px; bottom: 22px; width: 44px; height: 44px; border-radius: 50%; border: 0;
+      background: var(--button); color: #fff; font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,.18);
+      opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .2s, background .15s;
+    }
+    .to-top.visible { opacity: 1; transform: none; }
+    .to-top:hover { background: var(--button-hover); }
+    .to-top:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
+
+    @media (max-width: 760px) {
+      .panels, .stats, .pair { grid-template-columns: 1fr; }
+      .hero { padding-block: 4.5rem 1.5rem; }
+      .carousel .slide { padding-inline: 0; }
+      .carousel .nav { top: auto; bottom: -4px; width: 34px; height: 34px; }
+      .carousel .prev { left: calc(50% - 90px); }
+      .carousel .next { right: calc(50% - 90px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .button, .to-top, .copy-bib, .carousel .nav, .carousel .dots button { transition: none; }
+      .carousel .track { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<a class="venue-logo" href="https://algoverseairesearch.org/" target="_blank" rel="noopener" aria-label="Algoverse AI Research">
+  <img src="static/images/algoverse-logo.webp" alt="Algoverse AI Research" width="156" height="130">
+</a>
+
+<section class="hero container">
+  <h1 class="title">PeerConf: <span class="nowrap">Self-Calibrating</span> Early Stopping for Efficient Parallel LLM Reasoning</h1>
+  <p class="authors">
+    <span class="author-block"><a href="https://github.com/mofe-stack" target="_blank" rel="noopener">Mofe Atanda</a><sup>1†</sup>,</span>
+    <span class="author-block"><a href="https://github.com/Yani890" target="_blank" rel="noopener">Yani Baguenane</a><sup>1</sup>,</span>
+    <span class="author-block"><a href="https://github.com/yityler" target="_blank" rel="noopener">Tyler Yi</a><sup>1</sup>,</span>
+    <span class="author-block"><a href="https://github.com/denizflz" target="_blank" rel="noopener">Deniz Filiz</a><sup>1</sup>,</span>
+    <span class="author-block"><a href="https://scholar.google.com/citations?user=H7J0P3gAAAAJ" target="_blank" rel="noopener">Mohammed Mahfoud</a><sup>1</sup>,</span>
+    <span class="author-block"><a href="https://scholar.google.com/citations?user=xHgXEJ8AAAAJ" target="_blank" rel="noopener">Anusha Mujumdar</a><sup>1</sup></span>
+  </p>
+  <p class="affil"><sup>1</sup>Algoverse AI Research</p>
+  <p class="eql"><sup>†</sup>Project lead</p>
+  <p class="venue">NeurIPS 2026 · The 6th Workshop on Mathematical Reasoning and AI (MATH-AI) · under review</p>
+  <div class="links">
+    <a class="button" href="static/pdfs/peerconf.pdf" target="_blank" rel="noopener">
+      <img class="logo" src="static/images/neurips-logo.svg" alt="NeurIPS" width="59" height="27">
+      <span>Paper</span>
+    </a>
+    <a class="button" href="https://github.com/mofe-stack/PeerConf" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.4-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.2-4.6-1.1-4.6-4.9 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.8-2.3 4.7-4.6 4.9.4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      <span>Code</span>
+    </a>
+    <a class="button" href="https://anonymous.4open.science/r/PeerConf" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zm2 2v12h12V6zm2 2h8v2H8zm0 4h8v2H8z"/></svg>
+      <span>Benchmarks</span>
+    </a>
+    <a class="button" href="#bibtex">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18l-7-4-7 4z"/></svg>
+      <span>BibTeX</span>
+    </a>
+  </div>
+</section>
+
+<section class="section container">
+  <figure>
+    <img src="static/images/fig1.png" alt="PeerConf during online generation: traces that finish above the bar cast a vote and redraw the bar; traces below it are cut; completion probes let confident traces commit early. Panels show the self-calibrating bar and the completion probe. Stops: consensus check after every finisher, repetition guard, margin certificate." width="1215" height="653" loading="eager" fetchpriority="high">
+    <figcaption><b>PeerConf during online generation.</b> Every finisher redraws the confidence bar, so filtering and consensus checks begin at the first finished trace instead of after a warm-up phase. Completion probes let a trace that already knows its answer commit early and free its seat.</figcaption>
+  </figure>
+</section>
+
+<section class="section narrow">
+  <p class="lede">
+    <strong>Peer Think with Confidence (PeerConf)</strong> is a warm-up-free confidence filter for parallel LLM reasoning. Sampling many reasoning traces and voting improves accuracy, but every trace runs to completion regardless of quality. Confidence-based filtering can stop weak traces early, yet current methods such as <a href="https://arxiv.org/abs/2508.15260" target="_blank" rel="noopener">DeepConf</a> set their threshold from a dedicated warm-up phase that must finish before any trace can be filtered or a consensus check can run.
+  </p>
+  <p>
+    PeerConf estimates the same percentile threshold from the traces finishing within the run itself. The threshold arms at the first finisher and is recomputed at every finisher after it. PeerConf also probes running traces for their current answer: a trace whose probe clears a confidence threshold <em>and</em> closes the model's own reasoning commits early, casts that answer as its vote, and frees its seat for a replacement. No warm-up phase and no training: the filter is self-calibrating, armed at the first finisher and redrawn at every one after, so filtering and consensus checks begin immediately.
+  </p>
+  <div class="stats" aria-label="Headline results">
+    <div class="stat"><div class="n">53.1&ndash;79.8%</div><div class="l">fewer tokens than self-consistency at 32 traces</div></div>
+    <div class="stat"><div class="n">23.2&ndash;61.3%</div><div class="l">fewer tokens than DeepConf on the same questions</div></div>
+    <div class="stat"><div class="n">95.8%</div><div class="l">of DeepConf's tokens are spent before it can cut anything; on 27 of the 30 AIME25 questions the monitored wave never launches</div></div>
+  </div>
+</section>
+
+<section class="section container">
+  <h2 class="center">How it works</h2>
+  <div class="panels">
+    <div class="panel gen">
+      <span class="tag">Continuous generation</span>
+      <h3>Seats, not phases</h3>
+      <p>A run answers one question with at most 32 traces. An opening wave of 16 starts together; every trace that finishes, commits, or is cut frees a seat, and a replacement launches into it until the budget is spent. Consensus is checked at every departure, so a question can end the moment the traces agree.</p>
+    </div>
+    <div class="panel bar">
+      <span class="tag">Self-calibrating bar</span>
+      <h3>Finishers set the threshold</h3>
+      <p>Each finished trace contributes its lifetime-minimum window confidence to a calibration set. The bar is the same percentile rule DeepConf uses, but it arms at the first finisher and is redrawn at every one after, so it tracks how this question's traces actually behave instead of a frozen warm-up estimate.</p>
+    </div>
+    <div class="panel probe">
+      <span class="tag">Completion probe</span>
+      <h3>Commit when the answer is settled</h3>
+      <p>Every 4,096 tokens a running trace is asked for its answer with a short forced-answer prompt. If the probe ends on the end-of-thinking marker with confidence above the threshold, the trace commits: its answer becomes its vote and generation stops. Requiring closure is what keeps early commitment safe.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section container">
+  <h2 class="center">Main results</h2>
+  <figure class="narrow">
+    <img src="static/images/table1.png" alt="Table 1. DeepSeek-R1-8B: MATH500 SC@32 89.8% 122.38M tokens, DeepConf 91.0% 63.84M (-47.8%), PeerConf 91.0% 24.73M (-79.8%). AIME25 SC@32 83.3% 25.60M, DeepConf 83.3% 13.38M (-47.7%), PeerConf 83.3% 10.06M (-60.7%). HMMT25 SC@32 66.7% 28.34M, DeepConf 76.7% 17.31M (-38.9%), PeerConf 73.3% 13.30M (-53.1%). GPT-OSS-20B AIME25 DeepConf 83.3% 18.26M, PeerConf 86.7% 9.84M (-46.1%)." width="1225" height="575" loading="lazy">
+    <figcaption>PeerConf-low matches or exceeds self-consistency on every benchmark while generating 53.1&ndash;79.8% fewer tokens, against DeepConf's 38.9&ndash;47.8%. On AIME25 with GPT-OSS-20B it beats DeepConf by 3.4 points using 46.1% fewer tokens. Totals include every token the completion probes generate.</figcaption>
+  </figure>
+</section>
+
+<section class="section container">
+  <h2 class="center">What the completion probes do</h2>
+  <div class="carousel" id="results-carousel" aria-roledescription="carousel" aria-label="Completion probe results">
+    <div class="track">
+      <figure class="slide" role="group" aria-roledescription="slide" aria-label="1 of 4">
+        <img src="static/images/fig3.png" alt="Ghost run on DeepSeek-R1-8B: bars of tokens generated at full completion versus probe thresholds 0.90 to 0.99 on MATH500, AIME25, and HMMT25, with accuracy inside each bar." width="1224" height="421" loading="lazy">
+        <figcaption><b>Ghost run.</b> One trace per question, run to full completion while recording where each probe would have committed. On AIME25 and HMMT25 accuracy is identical to full completion at every threshold while tokens fall by 20&ndash;25% and 17&ndash;30%. MATH500 trades a 1.1&ndash;2.0 point drop for 49.6&ndash;56.6% savings.</figcaption>
+      </figure>
+      <figure class="slide" role="group" aria-roledescription="slide" aria-label="2 of 4">
+        <img src="static/images/fig2.png" alt="Two completion probes on one HMMT25 trace. At 9,003 tokens the probe answers 12250 with confidence 0.343 and no closing marker, so no commit. At 21,291 tokens it answers 6300 with confidence 0.999 in 7 tokens, ending on the marker, and commits." width="1225" height="253" loading="lazy">
+        <figcaption><b>Completion probe in action.</b> Two probes on one HMMT25 trace, correct answer 6300. Mid-reasoning the probe answers wrongly and runs out its 20-token budget. Once the trace has settled it answers in seven tokens and stops on the marker.</figcaption>
+      </figure>
+      <figure class="slide" role="group" aria-roledescription="slide" aria-label="3 of 4">
+        <img src="static/images/fig4.png" alt="Where each of the 500 MATH-500 traces ended versus where a probe at 0.97 would have stopped it, ordered by trace length. 1.8M tokens never generated, 46% of the total." width="1225" height="528" loading="lazy">
+        <figcaption><b>Tokens after the answer was settled.</b> Where each MATH500 trace ended against where a 0.97 probe would have stopped it. The gap is 1.8M tokens, 46% of the benchmark, and it widens with trace length.</figcaption>
+      </figure>
+      <figure class="slide" role="group" aria-roledescription="slide" aria-label="4 of 4">
+        <img src="static/images/fig5.png" alt="Ablation on MATH500 over probe thresholds 0.90 to 0.999: with closure plus confidence, accuracy stays between 85.5% and 86.9% against 87.3% for full completion; with confidence only it starts at 76.5%. Tokens generated are lower for confidence only." width="1224" height="439" loading="lazy">
+        <figcaption><b>Closure ablation on MATH500.</b> Requiring the model to finish its own reasoning keeps accuracy between 85.5% and 86.9% at every threshold, against 87.3% for full completion. Confidence alone starts at 76.5%. Closure still removes 37&ndash;50% of generation.</figcaption>
+      </figure>
+    </div>
+    <button class="nav prev" type="button" aria-label="Previous figure">&#8249;</button>
+    <button class="nav next" type="button" aria-label="Next figure">&#8250;</button>
+    <div class="dots" role="tablist" aria-label="Choose figure"></div>
+  </div>
+</section>
+
+<section class="section container" id="bibtex">
+  <div class="bib-head">
+    <h2>BibTeX</h2>
+    <button class="copy-bib" type="button" id="copy-bib" aria-live="polite">Copy</button>
+  </div>
+<pre><code id="bibtex-code">@inproceedings{atanda2026peerconf,
+  title     = {PeerConf: Self-Calibrating Early Stopping for Efficient Parallel LLM Reasoning},
+  author    = {Atanda, Mofe and Baguenane, Yani and Yi, Tyler and Filiz, Deniz and Mahfoud, Mohammed and Mujumdar, Anusha},
+  booktitle = {The 6th Workshop on Mathematical Reasoning and AI at NeurIPS 2026},
+  year      = {2026},
+  url       = {https://github.com/mofe-stack/PeerConf}
+}</code></pre>
+</section>
+
+<button class="to-top" type="button" id="to-top" aria-label="Back to top" hidden>&#8593;</button>
+
+<footer>
+  <p>Built for the PeerConf paper. Layout adapted from the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank" rel="noopener">Academic Project Page Template</a> and the <a href="https://nerfies.github.io" target="_blank" rel="noopener">Nerfies</a> page. Licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a>.</p>
+</footer>
+
+<script>
+  // Figure carousel: same behaviour as the template's bulma-carousel (loop, autoplay 5s),
+  // but plain scroll-snap so it needs no jQuery or Bulma.
+  (function () {
+    const root = document.getElementById('results-carousel');
+    if (!root) return;
+    const track = root.querySelector('.track');
+    const slides = Array.from(track.children);
+    const dots = root.querySelector('.dots');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let index = 0, timer;
+
+    slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.role = 'tab'; b.setAttribute('aria-label', 'Figure ' + (i + 1));
+      b.addEventListener('click', () => manual(i));
+      dots.appendChild(b);
+    });
+
+    function go(i) {
+      index = (i + slides.length) % slides.length;
+      track.scrollTo({ left: slides[index].offsetLeft, behavior: reduce ? 'auto' : 'smooth' });
+      dots.querySelectorAll('button').forEach((d, j) => d.setAttribute('aria-selected', j === index));
+    }
+    // Always rotating, even under the cursor. A press on any control stops the rotation
+    // and it only resumes once the user has left it alone for IDLE_MS.
+    const STEP_MS = 5000, IDLE_MS = 8000;
+    let idle, visible = false;
+    function restart() {
+      clearInterval(timer);
+      if (!reduce && visible) timer = setInterval(() => go(index + 1), STEP_MS);
+    }
+    function manual(i) {
+      go(i);
+      clearInterval(timer);
+      clearTimeout(idle);
+      idle = setTimeout(() => { idle = null; restart(); }, IDLE_MS);
+    }
+
+    root.querySelector('.prev').addEventListener('click', () => manual(index - 1));
+    root.querySelector('.next').addEventListener('click', () => manual(index + 1));
+    root.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') manual(index - 1);
+      if (e.key === 'ArrowRight') manual(index + 1);
+    });
+    // keep the dots honest if the user swipes on touch
+    let scrollTimer;
+    track.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const i = Math.round(track.scrollLeft / track.clientWidth);
+        if (i !== index) { index = i; dots.querySelectorAll('button').forEach((d, j) => d.setAttribute('aria-selected', j === index)); }
+      }, 120);
+    });
+    window.addEventListener('resize', () => track.scrollTo({ left: slides[index].offsetLeft, behavior: 'auto' }));
+    go(0);
+    // Rotation only runs while the carousel is on screen. The first advance comes 3s
+    // after it first appears, then every 5s; it pauses whenever it scrolls out of view.
+    const FIRST_MS = 3000;
+    let started = false;
+    new IntersectionObserver(entries => {
+      visible = entries[0].isIntersecting;
+      if (!visible) { clearInterval(timer); return; }
+      if (idle) return;
+      if (!started && !reduce) {
+        started = true;
+        clearInterval(timer);
+        timer = setTimeout(() => { go(index + 1); restart(); }, FIRST_MS);
+      } else restart();
+    }, { threshold: 0.35 }).observe(root);
+  })();
+
+  // Copy BibTeX
+  (function () {
+    const btn = document.getElementById('copy-bib');
+    const code = document.getElementById('bibtex-code');
+    if (!btn || !code) return;
+    btn.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(code.textContent); }
+      catch { const r = document.createRange(); r.selectNodeContents(code); const s = getSelection(); s.removeAllRanges(); s.addRange(r); return; }
+      btn.textContent = 'Copied'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  })();
+
+  // Back to top
+  (function () {
+    const btn = document.getElementById('to-top');
+    if (!btn) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function update() {
+      const show = window.scrollY > 300;
+      btn.hidden = false;
+      btn.classList.toggle('visible', show);
+      btn.setAttribute('aria-hidden', String(!show));
+      btn.tabIndex = show ? 0 : -1;
+    }
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }));
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+
+</body>
+</html>
