@@ -2,6 +2,8 @@
 
 warmup-free confidence filtering for parallel llm reasoning.
 
+**website:** https://mofe-stack.github.io/PeerConf/
+
 peerconf is a method for making parallel test-time reasoning more compute-efficient by
 using confidence estimates from the reasoning traces generated within the current run.
 
