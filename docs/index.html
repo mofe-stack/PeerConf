@@ -208,7 +208,7 @@
 <section class="section container">
   <figure>
     <img src="static/images/fig1.png" alt="PeerConf during online generation: traces that finish above the bar cast a vote and redraw the bar; traces below it are cut; completion probes let confident traces commit early. Panels show the self-calibrating bar and the completion probe. Stops: consensus check after every finisher, repetition guard, margin certificate." width="1215" height="653" loading="eager" fetchpriority="high">
-    <figcaption><b>PeerConf during online generation.</b> Every finisher redraws the confidence bar, so filtering and consensus checks begin at the first finished trace instead of after a warm-up phase. Completion probes let a trace that already knows its answer commit early and free its seat.</figcaption>
+    <figcaption><b>PeerConf during online generation.</b> Every finisher redraws the confidence bar, so filtering and consensus checks begin at the first finished trace instead of after a warm-up phase. Completion probes let a trace that has already reached its answer commit early and free its seat.</figcaption>
   </figure>
 </section>
 
@@ -242,7 +242,7 @@
     <div class="panel probe">
       <span class="tag">Completion probe</span>
       <h3>Commit when the answer is settled</h3>
-      <p>Every 4,096 tokens a running trace is asked for its answer with a short forced-answer prompt. If the probe ends on the end-of-thinking marker with confidence above the threshold, the trace commits: its answer becomes its vote and generation stops. Requiring closure is what keeps early commitment safe.</p>
+      <p>Every 4,096 tokens a running trace is asked for its answer with a short forced-answer prompt. If the probe ends on the end-of-thinking marker with confidence above the threshold, the trace commits: its answer becomes its vote and generation stops. Requiring closure is what stabilizes accuracy.</p>
     </div>
   </div>
 </section>
@@ -251,7 +251,7 @@
   <h2 class="center">Main results</h2>
   <figure class="narrow">
     <img src="static/images/table1.png" alt="Table 1. DeepSeek-R1-8B: MATH500 SC@32 89.8% 122.38M tokens, DeepConf 91.0% 63.84M (-47.8%), PeerConf 91.0% 24.73M (-79.8%). AIME25 SC@32 83.3% 25.60M, DeepConf 83.3% 13.38M (-47.7%), PeerConf 83.3% 10.06M (-60.7%). HMMT25 SC@32 66.7% 28.34M, DeepConf 76.7% 17.31M (-38.9%), PeerConf 73.3% 13.30M (-53.1%). GPT-OSS-20B AIME25 DeepConf 83.3% 18.26M, PeerConf 86.7% 9.84M (-46.1%)." width="1225" height="575" loading="lazy">
-    <figcaption>PeerConf-low matches or exceeds self-consistency on every benchmark while generating 53.1&ndash;79.8% fewer tokens, against DeepConf's 38.9&ndash;47.8%. On AIME25 with GPT-OSS-20B it beats DeepConf by 3.4 points using 46.1% fewer tokens. Totals include every token the completion probes generate.</figcaption>
+    <figcaption>PeerConf-low matches or exceeds self-consistency on every benchmark while generating 53.1&ndash;79.8% fewer tokens, against DeepConf's 38.9&ndash;47.8%. On AIME25 with GPT-OSS-20B it beats DeepConf by 3.3 points using 46.1% fewer tokens. Totals include every token the completion probes generate.</figcaption>
   </figure>
 </section>
 
