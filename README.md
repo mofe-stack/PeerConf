@@ -39,7 +39,7 @@ it generates. this allows computation to be redirected away from traces
 that have already reached a sufficiently confident conclusion or dropped below the
 threshold and toward additional independent attempts.
 
-consensous across the finished traces is checked every time a trace deaprts instead of after a seperate warmup phase, so a question
+consensous across the finished traces is checked every time a trace departs instead of after a seperate warmup phase, so a question
 can end as soon as the model's traces agree on an answer.
 
 the goal is to retain the benefits of parallel reasoning and confidence-weighted voting
