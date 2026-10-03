@@ -15,7 +15,7 @@ about what level of confidence is typical among successful completions.
 peerconf uses these two observations to decide which traces are worth continuing. unlike
 approaches that require a separate warm-up phase to estimate a confidence threshold,
 peerconf estimates this threshold online from traces that have already finished for the
-current problem. confidence filtering and consensous checks can therefore begin as soon as the first trace
+current problem. confidence filtering and consensus checks can therefore begin as soon as the first trace
 finishes.
 
 ## how peerconf works
@@ -39,7 +39,7 @@ it generates. this allows computation to be redirected away from traces
 that have already reached a sufficiently confident conclusion or dropped below the
 threshold and toward additional independent attempts.
 
-consensous across the finished traces is checked every time a trace departs instead of after a seperate warmup phase, so a question
+consensus across the finished traces is checked every time a trace departs instead of after a separate warmup phase, so a question
 can end as soon as the model's traces agree on an answer.
 
 the goal is to retain the benefits of parallel reasoning and confidence-weighted voting
