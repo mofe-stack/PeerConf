@@ -23,8 +23,8 @@ finishes.
 for each problem, we launch multiple reasoning traces in parallel.
 
 as traces finish, peerconf uses their confidence scores to construct an online
-confidence threshold. a replacement trace whose confidence falls below that threshold is
-cut and casts no vote.
+confidence threshold. a replacement trace is judged against that threshold as it
+generates, and one whose confidence falls below it is cut and casts no vote.
 
 active traces are also periodically probed with a short forced-answer prompt to
 determine whether they have effectively committed to an answer. a trace commits early
@@ -37,11 +37,9 @@ when:
 
 that answer then becomes the trace's vote and its seat is freed.
 
-when a trace leaves an active seat, peerconf can launch a replacement trace, subject to
-the configured sampling budget, and that replacement is judged against the threshold as
-it generates. this allows computation to be redirected away from traces
-that have already reached a confident answer or dropped below the
-threshold and toward additional independent attempts.
+when a trace leaves an active seat, peerconf launches a replacement trace into it,
+subject to the configured sampling budget. this redirects computation away from traces
+that are finished or cut and toward additional independent attempts.
 
 consensus across the finished traces is checked every time a trace departs instead of after a separate warmup phase, so a question
 can end as soon as the model's traces agree on an answer.
