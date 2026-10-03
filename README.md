@@ -38,8 +38,8 @@ when:
 that answer then becomes the trace's vote and its seat is freed.
 
 when a trace leaves an active seat, peerconf launches a replacement trace into it,
-subject to the configured sampling budget, so computation moves away from traces that
-are finished or cut and toward additional independent attempts.
+subject to the configured sampling budget. this redirects computation away from traces
+that are finished or cut and toward additional independent attempts.
 
 consensus across the finished traces is checked every time a trace departs instead of after a separate warmup phase, so a question
 can end as soon as the model's traces agree on an answer.
