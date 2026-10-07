@@ -210,7 +210,7 @@
 <section class="section container">
   <figure>
     <img src="static/images/fig1.png" alt="PeerConf during online generation: traces that finish above the bar cast a vote and redraw the bar; traces below it are cut; completion probes let confident traces commit early. Panels show the self-calibrating bar and the completion probe. Stops: consensus check after every finisher, repetition guard, margin certificate." width="1215" height="653" loading="eager" fetchpriority="high">
-    <figcaption><b>PeerConf during online generation.</b> Every finisher redraws the confidence bar, so filtering and consensus checks begin at the first finished trace instead of after a warm-up phase. Completion probes let a trace that has already reached its answer commit early and free its seat.</figcaption>
+    <figcaption><b>PeerConf (Peer Think with Confidence)</b> runs many reasoning traces in parallel and lets them vote on an answer, using the traces that finish first to judge the ones still running. Every finisher redraws the confidence bar, so filtering and consensus checks begin at the first finished trace instead of after a warm-up phase. Completion probes let a trace that has already reached its answer commit early and free its seat.</figcaption>
   </figure>
 </section>
 
