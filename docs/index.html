@@ -79,6 +79,7 @@
     figure img { display: block; width: 100%; height: auto; }
     figcaption { text-align: center; color: var(--text); font-size: 1.05rem; margin-top: 1rem; max-width: 72ch; margin-inline: auto; }
     figcaption b { color: var(--ink); }
+    .tagline { text-align: center; font-size: 1.2rem; line-height: 1.5; color: var(--ink); font-weight: 600; margin: 0 auto; max-width: 64ch; }
     .section { padding-block: 2rem; }
     .section + .section { border-top: 1px solid var(--rule); }
     h2 { font-size: 1.6rem; color: var(--ink); margin: 0 0 1rem; text-wrap: balance; }
@@ -210,7 +211,6 @@
 <section class="section container">
   <figure>
     <img src="static/images/fig1.png" alt="PeerConf during online generation: traces that finish above the bar cast a vote and redraw the bar; traces below it are cut; completion probes let confident traces commit early. Panels show the self-calibrating bar and the completion probe. Stops: consensus check after every finisher, repetition guard, margin certificate." width="1215" height="653" loading="eager" fetchpriority="high">
-    <figcaption><b>PeerConf (Peer Think with Confidence)</b> runs many reasoning traces in parallel and lets them vote on an answer, using the traces that finish first to judge the ones still running. Every finisher redraws the confidence bar, so filtering and consensus checks begin at the first finished trace instead of after a warm-up phase. Completion probes let a trace that has already reached its answer commit early and free its seat.</figcaption>
   </figure>
 </section>
 
@@ -226,6 +226,10 @@
     <div class="stat"><div class="n">23.2&ndash;61.3%</div><div class="l">fewer tokens than DeepConf on the same questions</div></div>
     <div class="stat"><div class="n">95.8%</div><div class="l">of DeepConf's tokens are spent before it can cut anything; on 27 of the 30 AIME25 questions the monitored wave never launches</div></div>
   </div>
+</section>
+
+<section class="section narrow">
+  <p class="tagline">Every finisher redraws the confidence bar, so filtering and consensus checks begin at the first finished trace instead of after a warm-up phase, and completion probes let a trace that has already reached its answer commit early and free its seat.</p>
 </section>
 
 <section class="section container">
